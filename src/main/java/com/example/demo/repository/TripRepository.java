@@ -13,4 +13,6 @@ public interface TripRepository extends JpaRepository<Trip,Long>{
 	
 	List<Trip> getTripByDriverIdAndTripDate(Long driverId,LocalDate tripDate);
 	
+	List<Trip> getTripByVehicleIdAndTripDate(Long vehicleId,LocalDate tripDate);
+	
 }

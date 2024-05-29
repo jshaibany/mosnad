@@ -50,6 +50,11 @@ public class TripService {
 		return tripRepository.getTripByDriverIdAndTripDate(driverId, tripDate).size()>0;
 	}
 	
+	public Boolean vehicleIsAlreadyAssigned(Long vehicleId, LocalDate tripDate) {
+		
+		return tripRepository.getTripByVehicleIdAndTripDate(vehicleId, tripDate).size()>0;
+	}
+	
 	public TripReservation createTripReservation(TripReservation tr) {
 		
 		return tripReservationRepository.save(tr);

@@ -17,6 +17,7 @@ import com.example.demo.entity.TripReservation;
 import com.example.demo.entity.Vehicle;
 import com.example.demo.exceptions.DriverAlreadyAssignedTrip;
 import com.example.demo.exceptions.InvalidTripDate;
+import com.example.demo.exceptions.VehicleAlreadyAssignedTrip;
 import com.example.demo.service.TripService;
 import com.example.demo.service.VehicleService;
 
@@ -85,6 +86,10 @@ public class TripController {
 			//Check if assigned driver is already assigned to another trip in the same date
 			if(tripService.driverIsAlreadyAssigned(trip.getDriverId(), trip.getTripDate()))
 				throw new DriverAlreadyAssignedTrip("DriverAlreadyAssignedTrip");
+			
+			//Check if vehicle is already assigned to another trip in the same date
+			if(tripService.vehicleIsAlreadyAssigned(trip.getVehicleId(), trip.getTripDate()))
+				throw new VehicleAlreadyAssignedTrip("VehicleAlreadyAssignedTrip");
 				
 			Trip t = tripService.createTrip(trip);
 
@@ -102,6 +107,13 @@ public class TripController {
 		      return response;
 		}catch (DriverAlreadyAssignedTrip e) {
 		      System.out.println("DriverAlreadyAssignedTrip: " + e.getMessage());
+			    
+		      response.put("Message", e.getMessage());
+		      response.put("Result", -1);
+		      
+		      return response;
+		}catch (VehicleAlreadyAssignedTrip e) {
+		      System.out.println("VehicleAlreadyAssignedTrip: " + e.getMessage());
 			    
 		      response.put("Message", e.getMessage());
 		      response.put("Result", -1);
