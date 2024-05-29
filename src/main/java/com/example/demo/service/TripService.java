@@ -45,6 +45,11 @@ public class TripService {
 		return tripRepository.findOne(e).get();
 	}
 	
+	public Boolean driverIsAlreadyAssigned(Long driverId, LocalDate tripDate) {
+		
+		return tripRepository.getTripByDriverIdAndTripDate(driverId, tripDate).size()>0;
+	}
+	
 	public TripReservation createTripReservation(TripReservation tr) {
 		
 		return tripReservationRepository.save(tr);

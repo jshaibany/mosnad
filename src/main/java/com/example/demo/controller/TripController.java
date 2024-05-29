@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.entity.Trip;
 import com.example.demo.entity.TripReservation;
 import com.example.demo.entity.Vehicle;
+import com.example.demo.exceptions.DriverAlreadyAssignedTrip;
 import com.example.demo.exceptions.InvalidTripDate;
 import com.example.demo.service.TripService;
 import com.example.demo.service.VehicleService;
@@ -80,6 +81,10 @@ public class TripController {
 			//Check trip date if before today
 			if(trip.getTripDate().isBefore(LocalDate.now()))
 				throw new InvalidTripDate("InvalidTripDate: Trip date cannot be before today");
+			
+			//Check if assigned driver is already assigned to another trip in the same date
+			if(tripService.driverIsAlreadyAssigned(trip.getDriverId(), trip.getTripDate()))
+				throw new DriverAlreadyAssignedTrip("DriverAlreadyAssignedTrip");
 				
 			Trip t = tripService.createTrip(trip);
 
@@ -90,6 +95,13 @@ public class TripController {
 		    
 		}catch (InvalidTripDate e) {
 		      System.out.println("InvalidTripDate: " + e.getMessage());
+			    
+		      response.put("Message", e.getMessage());
+		      response.put("Result", -1);
+		      
+		      return response;
+		}catch (DriverAlreadyAssignedTrip e) {
+		      System.out.println("DriverAlreadyAssignedTrip: " + e.getMessage());
 			    
 		      response.put("Message", e.getMessage());
 		      response.put("Result", -1);
