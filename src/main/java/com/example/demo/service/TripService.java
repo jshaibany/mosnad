@@ -39,6 +39,12 @@ public class TripService {
 		return tripRepository.save(t);
 	}
 	
+	public Trip findTrip(Trip t) {
+		
+		Example<Trip> e = Example.of(t);
+		return tripRepository.findOne(e).get();
+	}
+	
 	public TripReservation createTripReservation(TripReservation tr) {
 		
 		return tripReservationRepository.save(tr);

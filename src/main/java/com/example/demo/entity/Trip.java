@@ -18,6 +18,8 @@ public class Trip {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
+	
+
 	@Column(name = "triptakeofftime")
     @Temporal(TemporalType.TIME)
     private LocalTime tripTakeoffTime;
@@ -35,14 +37,16 @@ public class Trip {
 	
 	@Column(name = "tripfrom")
     private String tripFrom;
-	
-	
 
 	@Column(name = "tripto")
     private String tripTo;
 	
 	@Column(name = "driverid")
     private Long driverId;
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
 	
 	public LocalTime getTripTakeoffTime() {
 		return tripTakeoffTime;

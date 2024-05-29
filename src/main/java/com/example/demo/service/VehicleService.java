@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entity.Vehicle;
@@ -15,6 +16,13 @@ public class VehicleService {
 		this.vehicleRepository = vehicleRepository;
 	}
 	
+	public Vehicle findVehicle(Vehicle vehicle) {
+		
+		Example<Vehicle> v = Example.of(vehicle);
+		
+		return vehicleRepository.findOne(v).get();
+	}
+
 	public Vehicle createVehicle(Vehicle v) {
 		
 		return vehicleRepository.save(v);

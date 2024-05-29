@@ -14,15 +14,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entity.Trip;
 import com.example.demo.entity.TripReservation;
+import com.example.demo.entity.Vehicle;
+import com.example.demo.exceptions.InvalidTripDate;
 import com.example.demo.service.TripService;
+import com.example.demo.service.VehicleService;
 
 @RestController
 public class TripController {
 
 	private final TripService tripService;
+	private final VehicleService vehicleService;
 	
-	public TripController(TripService tripService) {
+	public TripController(TripService tripService, VehicleService vehicleService) {
 		this.tripService = tripService;
+		this.vehicleService = vehicleService;
 		
 	}
 	
@@ -72,6 +77,10 @@ public class TripController {
 		
 		try{
 			
+			//Check trip date if before today
+			if(trip.getTripDate().isBefore(LocalDate.now()))
+				throw new InvalidTripDate("InvalidTripDate: Trip date cannot be before today");
+				
 			Trip t = tripService.createTrip(trip);
 
 		    response.put("Trip", t);
@@ -79,6 +88,13 @@ public class TripController {
 		    
 		    return response;
 		    
+		}catch (InvalidTripDate e) {
+		      System.out.println("InvalidTripDate: " + e.getMessage());
+			    
+		      response.put("Message", e.getMessage());
+		      response.put("Result", -1);
+		      
+		      return response;
 		}catch (Exception e) {
 		      System.out.println("Error parsing date: " + e.getMessage());
 		    
@@ -151,13 +167,24 @@ public class TripController {
 		
 		try{
 			
+			Trip t = new Trip();
+			t.setId(Id);
+			
+			t= tripService.findTrip(t);
+			
+			Vehicle v = new Vehicle();
+			v.setId(t.getVehicleId());
+			
+			v= vehicleService.findVehicle(v);
+			
 			List<Object[]> l = tripService.getTotalReservationsByTripId(Id);
 			
 			Object[] row = l.get(0);
 			System.out.println(String.format("%s Total Reserv, Trip %s", row[0].toString(),Id));
 			
 		    response.put("Reservations", row[0]);
-		    response.put("Trip", Id);
+		    response.put("Trip", t);
+		    response.put("Vehicle", v);
 		    response.put("Result", 0);
 		    
 		    return response;
